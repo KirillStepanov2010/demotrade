@@ -3,6 +3,8 @@ import { useCryptos } from "@/app/market/Table/useCryptos"
 import { cellHandler } from "./TableHandlers"
 import { colTitles, sortableCols, visCols } from "./tableTitles"
 import { useInfiniteScroll } from "./UseInfinitieScroll"
+import { usePlotData } from "../Plot/UsePlotData"
+import { MarketStore } from "../MarketStore"
 
 const Table = React.memo(({ children }: { children: React.ReactNode }) => (
   <table className="max-w-screen">{children}</table>
@@ -13,9 +15,15 @@ const Thead = React.memo(({ children }: { children: React.ReactNode }) => (
 const Tbody = React.memo(({ children }: { children: React.ReactNode }) => (
   <tbody>{children}</tbody>
 ))
-const Tr = React.memo(({ children }: { children: React.ReactNode }) => (
-  <tr>{children}</tr>
-))
+const Tr = React.memo(
+  ({
+    children,
+    onClick,
+  }: {
+    children: React.ReactNode
+    onClick?: () => void
+  }) => <tr onClick={onClick}>{children}</tr>
+)
 const Th = React.memo(
   ({
     children,
@@ -94,7 +102,9 @@ const MarketTable = () => {
   const tableRows = useMemo(
     () =>
       allCryptos.map((row) => (
-        <Tr key={row.id}>{visCols.map((coll) => cellHandler(row, coll))}</Tr>
+        <Tr key={row.id} onClick={() => MarketStore.setCurrencyId(row.id)}>
+          {visCols.map((coll) => cellHandler(row, coll))}
+        </Tr>
       )),
     [allCryptos]
   )
