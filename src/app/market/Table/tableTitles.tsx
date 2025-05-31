@@ -47,3 +47,31 @@ export const colTitles = {
   atl_date: "Дата минимума",
   last_updated: "Последнее обновление",
 }
+
+export const walletTableTitles = {
+  id: "Название",
+  image: "Изображение",
+  onBalance: "На счету",
+  spendSum: "Сумма затрат",
+  profit: "Прибыль USDT",
+  current_price: "Текущая цена USD",
+  high_24h: "Максимум за 24ч USD",
+  low_24h: "Минимум за 24ч USD",
+  price_change_24h: "Изменение цены (24ч) USD",
+  price_change_percentage_24h: "Изменение цены % (24ч)",
+  last_updated: "Последнее обновление",
+}
+
+export const visColsWallet = [
+  "id",
+  "image",
+  "onBalance",
+  "spendSum",
+  "profit",
+  "current_price",
+  "high_24h",
+  "low_24h",
+  "price_change_24h",
+  "market_cap_change_percentage_24h",
+  "last_updated",
+]

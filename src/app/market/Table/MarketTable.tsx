@@ -1,49 +1,16 @@
-import React, { useRef, useState, useMemo, useCallback } from "react"
+import React, { useRef, useState, useMemo, useCallback, useEffect } from "react"
 import { useCryptos } from "@/app/market/Table/useCryptos"
 import { cellHandler } from "./TableHandlers"
 import { colTitles, sortableCols, visCols } from "./tableTitles"
 import { useInfiniteScroll } from "./UseInfinitieScroll"
 import { usePlotData } from "../Plot/UsePlotData"
 import { MarketStore } from "../MarketStore"
-
-const Table = React.memo(({ children }: { children: React.ReactNode }) => (
-  <table className="max-w-screen">{children}</table>
-))
-const Thead = React.memo(({ children }: { children: React.ReactNode }) => (
-  <thead>{children}</thead>
-))
-const Tbody = React.memo(({ children }: { children: React.ReactNode }) => (
-  <tbody>{children}</tbody>
-))
-const Tr = React.memo(
-  ({
-    children,
-    onClick,
-  }: {
-    children: React.ReactNode
-    onClick?: () => void
-  }) => <tr onClick={onClick}>{children}</tr>
-)
-const Th = React.memo(
-  ({
-    children,
-    onClick,
-    className,
-  }: {
-    children: React.ReactNode
-    onClick?: () => void
-    className?: string
-  }) => (
-    <th onClick={onClick} className={className}>
-      {children}
-    </th>
-  )
-)
+import { Table, Tbody, Th, Thead, Tr } from "./TableComponents"
 
 const MarketTable = () => {
   const [sortKey, setSortKey] = useState<null | string>(null)
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc")
-
+  console.log(MarketStore.purchaseHistory)
   const {
     data,
     fetchNextPage,
@@ -102,12 +69,24 @@ const MarketTable = () => {
   const tableRows = useMemo(
     () =>
       allCryptos.map((row) => (
-        <Tr key={row.id} onClick={() => MarketStore.setCurrencyId(row.id)}>
+        <Tr
+          key={row.id}
+          onClick={() => MarketStore.setCurrency(row.id, row.current_price)}
+        >
           {visCols.map((coll) => cellHandler(row, coll))}
         </Tr>
       )),
     [allCryptos]
   )
+
+  const isInitialSet = useRef(false) // Флаг первого выполнения
+
+  useEffect(() => {
+    if (allCryptos.length > 1 && !isInitialSet.current) {
+      MarketStore.setCurrency(allCryptos[0].id, allCryptos[0].current_price)
+      isInitialSet.current = true // Помечаем, что установка произошла чтобы при загрузке данных выбрать начальную валюту в маркетстор
+    }
+  }, [allCryptos])
 
   if (isLoading || !data) return <div>Loading...</div>
   if (isError) return <div>Error: {error?.message}</div>

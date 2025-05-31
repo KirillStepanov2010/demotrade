@@ -43,7 +43,7 @@ const ChangeCell = ({ value }: { value: number }) => {
 
 const NumberCell = ({ value }: { value: number | string }) => (
   <td>
-    {typeof value === "number" ? value.toFixed(3).replace(/\.?0+$/, "") : value}
+    {typeof value === "number" ? value.toFixed(8).replace(/\.?0+$/, "") : value}
   </td>
 )
 

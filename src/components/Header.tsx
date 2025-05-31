@@ -3,8 +3,10 @@ import React, { useState } from "react"
 import { Button } from "./ui/button"
 import { LoginForm } from "./LoginForm"
 import Link from "next/link"
+import { MarketStore } from "@/app/market/MarketStore"
+import { observer } from "mobx-react-lite"
 
-const Header = () => {
+const Header = observer(() => {
   const [visible, setVisible] = useState(false)
 
   return (
@@ -20,8 +22,12 @@ const Header = () => {
           </div>
           <div className="flex gap-5">
             <div className="flex items-center justify-center gap-5">
-              <div>BTC</div>
-              <div>USDT</div>
+              <div>
+                {MarketStore.wallet.bitcoin
+                  ? `${MarketStore.wallet.bitcoin} BTC`
+                  : `0.00 Btc`}
+              </div>
+              <div>{`${MarketStore.wallet.usdt} USDT`}</div>
             </div>
             <Button
               onClick={(): void => setVisible(!visible)}
@@ -45,6 +51,5 @@ const Header = () => {
       </div>
     </div>
   )
-}
-
+})
 export default Header
